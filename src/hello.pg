@@ -1,0 +1,15 @@
+abstract module {
+    HTML ui
+     
+    ui.p "hello" ("class": "hello")
+    
+    JSON data
+    data http.getJson "https://github.com/vadapallikrishna/brolang/nm.json"
+    range element
+    element.from data
+    loop element { 
+        ui.p element.title
+        ui.img element.imageurl
+        ui.button "Open"
+    }                                                                    
+ }
