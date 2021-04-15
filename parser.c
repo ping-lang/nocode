@@ -1,4 +1,5 @@
 #include "stdio.h"
+#include "stdlib.h"
 
 enum Token{
     logic_keyword, define_keyword, proof_keyword, true_keyword, false_keyword, identifier
@@ -40,19 +41,49 @@ int runtime_declare(int identifier) {
 
 }
 
-int returnLogic() {
-   char token[1024];
-   char value[1024];
-   char brace = 0;
+char token[1024];
+
+char* read_token() {
+    memset(token,0,sizeof(token));
+    char c = 0;
+    int i = 0;
+    while((c=getchar())){
+	if(c == ' ')
+            continue;
+	token[i] = c;
+        i = i + 1;
+    }
+    if(i > 0)
+    return token;
+    else
+    return NULL;
+}
+
+int parse() {
    int closecount = 0;
-   while(1){
-      
-       scanf("%s %s [^\{]%c", token, value, &brace);
-       if(brace == '{')
-           closecount = closecount + 1;
+   int iseof = 0;
+   int i = 0;
+   char c = 0;
+   while(iseof != EOF){
+       char *token = read_token();
+       if(token == NULL)
+	  return 0;
        else
-	   closecount = closecount - 1;
-       printf("read token%s value%s\n", token, value);
+          printf("token%s", token);
+       char* value = read_token();
+       if(token == NULL)
+	  return 0;
+       else
+          printf("value%s", value);
+       c = getchar();
+       if(c == '\n')
+	   printf("newline\n");
+       else {
+	   if(c == '{')
+               closecount = closecount + 1;
+           else
+	       closecount = closecount - 1;
+       }
        if(returnToken(token) == logic_keyword && returnToken(value) == identifier)
            push(identifiers++);
 
@@ -62,5 +93,5 @@ int returnLogic() {
 int main() {
    printf("PING LANGUAGE nocode\n");
    printf("VADAPALLI KRISHNA SATYA\n");
-   returnLogic();	   
+   parse();	   
 }

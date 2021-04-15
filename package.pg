@@ -1,11 +1,8 @@
 
-design module package {
-    dependencies = (
-       "ui": "toolchain/ui"
-       "httpclient": "toolchain/http/client"
-    )
-
-    build = (
-      "target": file("src/hello.pg")
-    )    
+define package {
+    logic name
+    proof get {
+        logic  url
+	url https://github.com/github/lang
+    }
 }
