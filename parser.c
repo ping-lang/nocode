@@ -41,56 +41,83 @@ int runtime_declare(int identifier) {
 
 }
 
+int debug = 0;
+
+int debugprint(char* string, char* arg) {
+    if(debug == 1)
+	printf(string, arg);
+}
+
+int debugcount(char* string, int count) {
+    if(debug == 1)
+	printf(string, count);
+}
+
 char token[1024];
 
 char* read_token() {
+    	
     memset(token,0,sizeof(token));
     char c = 0;
     int i = 0;
-    while((c=getchar())){
-	if(c == ' ')
-            continue;
+    while((c=getchar())==' ')
+	 continue;   
+    while(c!=' '){
 	token[i] = c;
         i = i + 1;
+	c = getchar();
     }
     if(i > 0)
-    return token;
+        return token;
     else
-    return NULL;
+        return NULL;
 }
 
 int parse() {
    int closecount = 0;
-   int iseof = 0;
    int i = 0;
    char c = 0;
-   while(iseof != EOF){
+   int iseof = 0;
+   while(iseof!=EOF){
+       debugcount("closecount ", closecount);
+       c = getchar();
+       if(c == '}') {
+	  printf("close");
+	  closecount = closecount - 1;
+          if(closecount == 0)
+	      break;
+	  else
+	      continue;
+       } else {
+            ungetc(c, stdin);
+       }
        char *token = read_token();
        if(token == NULL)
 	  return 0;
        else
-          printf("token%s", token);
-       char* value = read_token();
-       if(token == NULL)
+          debugprint("token %s\n", token);
+       char *value = read_token();
+       if(value == NULL)
 	  return 0;
        else
-          printf("value%s", value);
+          debugprint("value %s\n", value);
        c = getchar();
        if(c == '\n')
-	   printf("newline\n");
-       else {
-	   if(c == '{')
-               closecount = closecount + 1;
-           else
-	       closecount = closecount - 1;
+	   debugprint("newline\n", "");
+       else if(c == '{'){
+	   debugprint("open\n", "");
+           closecount = closecount + 1;
        }
+
        if(returnToken(token) == logic_keyword && returnToken(value) == identifier)
            push(identifiers++);
 
    } 
 }
 
-int main() {
+int main(int argc, char** argv) {
+   if(argv[1][0]=='d')
+       debug = 1;
    printf("PING LANGUAGE nocode\n");
    printf("VADAPALLI KRISHNA SATYA\n");
    parse();	   

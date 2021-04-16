@@ -1,0 +1,10 @@
+
+define package {
+    logic name  
+    proof and {
+        logic  url 
+        logic name 
+        url true 
+        name true 
+    }
+}

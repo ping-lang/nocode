@@ -1,8 +1,0 @@
-
-define package {
-    logic name
-    proof get {
-        logic  url
-	url https://github.com/github/lang
-    }
-}
