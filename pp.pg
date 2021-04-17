@@ -1,0 +1,11 @@
+
+define package {
+    logic hello
+    proof hello {
+        logic hello
+        logic hello
+        hello and 
+    }
+
+    
+}

@@ -1,10 +1,10 @@
 
-define package {
-    logic name  
+define hello {
+    and true
     proof and {
-        logic  url 
-        logic name 
-        url true 
-        name true 
+        logic hello
+        logic hello
+        hello true
+        hello true
     }
 }

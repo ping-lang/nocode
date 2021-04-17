@@ -1,5 +1,6 @@
 #include "stdio.h"
 #include "stdlib.h"
+#include "string.h"
 
 enum Token{
     logic_keyword, define_keyword, proof_keyword, true_keyword, false_keyword, identifier
@@ -38,19 +39,21 @@ enum Boolean pop() {
 }
 
 int runtime_declare(int identifier) {
-
+    identifier++;
+    push(false_boolean);
 }
 
 int debug = 0;
+int closecount = 0;
 
 int debugprint(char* string, char* arg) {
     if(debug == 1)
 	printf(string, arg);
 }
 
-int debugcount(char* string, int count) {
+int debugcount() {
     if(debug == 1)
-	printf(string, count);
+	printf("closecount %d\n", closecount);
 }
 
 char token[1024];
@@ -60,12 +63,26 @@ char* read_token() {
     memset(token,0,sizeof(token));
     char c = 0;
     int i = 0;
-    while((c=getchar())==' ')
-	 continue;   
-    while(c!=' '){
+    while((c=getchar())!=EOF){   
+	if(c == ' ')
+	   if(i == 0)
+	       continue;
+           else	
+	       break;
+	else if(c == '\n')
+	    if(i == 0)
+	        continue;
+	    else
+		break;
+	else if(c == '{') {
+	   closecount = closecount + 1;
+	   continue;
+	} else if(c == '}') {
+           closecount = closecount - 1;
+           continue;	
+	}
 	token[i] = c;
         i = i + 1;
-	c = getchar();
     }
     if(i > 0)
         return token;
@@ -74,23 +91,11 @@ char* read_token() {
 }
 
 int parse() {
-   int closecount = 0;
    int i = 0;
    char c = 0;
    int iseof = 0;
    while(iseof!=EOF){
-       debugcount("closecount ", closecount);
-       c = getchar();
-       if(c == '}') {
-	  printf("close");
-	  closecount = closecount - 1;
-          if(closecount == 0)
-	      break;
-	  else
-	      continue;
-       } else {
-            ungetc(c, stdin);
-       }
+       debugcount();
        char *token = read_token();
        if(token == NULL)
 	  return 0;
@@ -101,16 +106,15 @@ int parse() {
 	  return 0;
        else
           debugprint("value %s\n", value);
-       c = getchar();
-       if(c == '\n')
-	   debugprint("newline\n", "");
-       else if(c == '{'){
-	   debugprint("open\n", "");
-           closecount = closecount + 1;
-       }
 
        if(returnToken(token) == logic_keyword && returnToken(value) == identifier)
            push(identifiers++);
+       else if(returnToken(token) == identifier) {
+	   if(returnToken(value) == false_keyword)
+               push(identifiers);
+	   else if(returnToken(value) == true_keyword)
+               push(identifiers);
+       }
 
    } 
 }

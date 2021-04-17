@@ -1,0 +1,7 @@
+
+define hello {
+    proof and {
+        logic p
+        logic q 
+    }
+}

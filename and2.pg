@@ -1,0 +1,9 @@
+
+define p {
+    logic p
+    p true
+    proof and {
+        logic q
+        q true
+    }
+}
